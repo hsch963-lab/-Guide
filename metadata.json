@@ -1,0 +1,8 @@
+{
+  "name": "P101 AI - Precision Parenting Assistant",
+  "description": "A comprehensive AI-powered parenting dashboard for tracking growth, nutrition, and mental health. Features personalized AI insights, developmental milestones, and specialized nutrition guides.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
