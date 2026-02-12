@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { getNutritionAdvice } from '../services/gemini';
-import { ChatMessage } from '../types';
+import { getNutritionAdvice } from '../services/gemini.ts';
+import { ChatMessage } from '../types.ts';
 
 const Nutrition: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([

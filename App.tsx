@@ -1,11 +1,11 @@
 
 import React, { useState } from 'react';
-import { ViewType } from './types';
-import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
-import GrowthTracker from './components/GrowthTracker';
-import MindCare from './components/MindCare';
-import Nutrition from './components/Nutrition';
+import { ViewType } from './types.ts';
+import Sidebar from './components/Sidebar.tsx';
+import Dashboard from './components/Dashboard.tsx';
+import GrowthTracker from './components/GrowthTracker.tsx';
+import MindCare from './components/MindCare.tsx';
+import Nutrition from './components/Nutrition.tsx';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');

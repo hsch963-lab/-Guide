@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { getGrowthAnalysis } from '../services/gemini';
+import { getGrowthAnalysis } from '../services/gemini.ts';
 
 const GrowthTracker: React.FC = () => {
   const [analysis, setAnalysis] = useState<string>("AI가 발달 상태를 분석 중입니다...");
