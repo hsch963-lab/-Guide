@@ -1,6 +1,6 @@
 {
-  "name": "P101 AI - Precision Parenting Assistant",
-  "description": "A comprehensive AI-powered parenting dashboard for tracking growth, nutrition, and mental health. Features personalized AI insights, developmental milestones, and specialized nutrition guides.",
+  "name": "NURSLY.AI - Precision Parenting Assistant",
+  "description": "30년 경력의 전문가 식견과 소아과학 근거 기반의 정밀 육아 가이드 엔진. NURSLY.AI는 발달 기제 분석 및 맞춤형 영양 솔루션을 제공합니다.",
   "requestFramePermissions": [
     "camera",
     "microphone"

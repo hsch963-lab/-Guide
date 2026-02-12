@@ -1,155 +1,134 @@
 
 import React from 'react';
+import { UserProfile } from '../types.ts';
 
-const MindCare: React.FC = () => {
+interface MindCareProps {
+  profile: UserProfile;
+}
+
+const MindCare: React.FC<MindCareProps> = ({ profile }) => {
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500">
-      <header className="mb-8">
-         <h1 className="text-3xl font-extrabold mb-2">부모 마음 보호막 (심리 케어)</h1>
-         <p className="text-slate-400 max-w-lg leading-relaxed">
-           “부모님의 행복이 곧 아이의 세상을 비추는 빛입니다. 당신은 이미 충분히 잘하고 있습니다.”
+    <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in duration-700">
+      <header className="mb-10">
+         <h1 className="text-4xl font-black tracking-tighter text-white mb-3">부모 심리 보호막</h1>
+         <p className="text-slate-400 max-w-xl leading-relaxed font-medium">
+           “{profile.parentName}님, 부모님의 행복이 곧 {profile.babyName}(이)의 세상을 비추는 빛입니다.<br/>당신은 이미 충분히 훌륭한 부모입니다.”
          </p>
       </header>
 
       <div className="grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-8 space-y-8">
           {/* Main Assessment */}
-          <section className="bg-card-bg/60 rounded-2xl p-8 border border-lavender/20 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-              <span className="material-icons-round text-[160px] text-lavender">psychology</span>
+          <section className="bg-gradient-to-br from-card-bg to-[#0d1818] rounded-3xl p-10 border border-lavender/20 relative overflow-hidden group shadow-2xl">
+            <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+              <span className="material-icons-round text-[200px] text-lavender">favorite</span>
             </div>
-            <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
+            <div className="relative z-10 flex flex-col md:flex-row gap-10 items-center">
               <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-3 text-lavender">산후 우울증 정기 검사</h2>
-                <p className="text-slate-400 mb-6 leading-relaxed text-sm">
-                  에든버러 산후우울증 척도(K-EPDS)는 정서적 건강을 정기적으로 확인하기 위한 도구입니다. 2분의 투자가 가족 모두에게 행복을 가져다줍니다.
+                <h2 className="text-3xl font-black mb-4 text-lavender tracking-tighter">정기 심리 자가진단</h2>
+                <p className="text-slate-400 mb-8 leading-relaxed text-sm font-medium">
+                  에든버러 산후우울증 척도(K-EPDS)는 정서적 건강을 정기적으로 확인하기 위한 학술적 도구입니다. 부모님의 정서적 안정은 {profile.babyName}의 애착 형성에 결정적인 역할을 합니다.
                 </p>
-                <div className="flex items-center gap-4">
-                   <button className="bg-primary hover:bg-primary/90 text-background-dark font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-primary/10">
-                     2분 검사 시작
+                <div className="flex items-center gap-6">
+                   <button className="bg-primary hover:scale-105 active:scale-95 text-background-dark font-black py-4 px-10 rounded-2xl transition-all shadow-xl shadow-primary/20 text-sm">
+                     2분 정밀 진단 시작
                    </button>
-                   <span className="text-xs text-slate-500 italic">마지막 검사: 12일 전</span>
+                   <span className="text-xs text-slate-500 font-bold italic">정기 검사 권장일: 매월 1회</span>
                 </div>
               </div>
-              <div className="bg-background-dark/80 p-6 rounded-2xl border border-primary/10 backdrop-blur-sm text-center">
-                 <div className="text-4xl font-black text-primary mb-1">08/30</div>
-                 <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">PREVIOUS SCORE</p>
-                 <div className="mt-4 w-32 bg-white/5 h-1.5 rounded-full overflow-hidden">
-                   <div className="bg-primary h-full w-[26%]"></div>
+              <div className="bg-background-dark/80 p-8 rounded-3xl border border-white/5 backdrop-blur-md text-center shadow-inner min-w-[160px]">
+                 <div className="text-5xl font-black text-white/20 mb-1">--</div>
+                 <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black">Score History</p>
+                 <div className="mt-6 w-32 bg-white/5 h-2 rounded-full overflow-hidden mx-auto">
+                   <div className="bg-slate-700 h-full w-[0%] transition-all duration-1000"></div>
                  </div>
               </div>
             </div>
           </section>
 
           {/* Trend Chart Mockup */}
-          <section className="bg-card-bg rounded-2xl p-8 border border-white/5">
-            <div className="flex justify-between items-center mb-8">
+          <section className="bg-card-bg rounded-3xl p-8 border border-white/5 shadow-lg">
+            <div className="flex justify-between items-center mb-10">
               <div>
-                <h3 className="text-lg font-bold">감정 건강 트렌드</h3>
-                <p className="text-xs text-slate-500">지난 14일간의 마음 날씨</p>
+                <h3 className="text-lg font-black text-white">감정 건강 트렌드</h3>
+                <p className="text-xs text-slate-500 font-medium">RE-ME 엔진이 분석한 최근 심리 변화</p>
               </div>
-              <div className="flex bg-white/5 rounded-full p-1 border border-white/5">
-                <button className="px-4 py-1 text-[10px] font-bold rounded-full bg-primary/20 text-primary">14일</button>
-                <button className="px-4 py-1 text-[10px] font-bold rounded-full text-slate-500">30일</button>
+              <div className="flex bg-background-dark/50 rounded-2xl p-1.5 border border-white/5">
+                <button className="px-5 py-1.5 text-[10px] font-black rounded-xl bg-primary/20 text-primary shadow-sm uppercase tracking-widest">14 Days</button>
+                <button className="px-5 py-1.5 text-[10px] font-black rounded-xl text-slate-600 uppercase tracking-widest">30 Days</button>
               </div>
             </div>
-            <div className="h-48 w-full relative">
-              <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1000 200">
+            <div className="h-56 w-full relative group">
+              <svg className="w-full h-full opacity-30" preserveAspectRatio="none" viewBox="0 0 1000 200">
                 <path d="M0,150 Q100,140 200,160 T400,120 T600,80 T800,100 T1000,90" fill="none" stroke="#19e5e6" strokeWidth="3" />
-                {[200, 400, 600, 800].map((x, i) => (
-                  <circle key={i} cx={x} cy={160 - (i*20)} r="4" fill="#19e5e6" />
-                ))}
               </svg>
-              <div className="flex justify-between mt-4 text-[9px] text-slate-600 font-bold uppercase tracking-widest">
-                <span>2주 전</span>
-                <span>지난 주</span>
-                <span>어제</span>
-                <span>오늘</span>
+              <div className="absolute inset-0 flex items-center justify-center">
+                 <div className="bg-white/5 px-6 py-3 rounded-2xl backdrop-blur-sm border border-white/10">
+                   <p className="text-xs font-bold text-slate-500 italic">진단 데이터가 축적되면 그래프가 활성화됩니다.</p>
+                 </div>
               </div>
-            </div>
-          </section>
-
-          {/* Small Achievements */}
-          <section>
-            <div className="flex items-center gap-3 mb-6">
-               <div className="w-10 h-10 rounded-xl bg-orange-400/10 flex items-center justify-center">
-                 <span className="material-icons-round text-orange-400">auto_awesome</span>
-               </div>
-               <div>
-                 <h3 className="text-lg font-bold">오늘의 작은 성취</h3>
-                 <p className="text-xs text-slate-500">나를 돌보는 행동들이 큰 변화를 만듭니다</p>
-               </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                { title: '물 1L 마시기', done: true },
-                { title: '10분간 명상', done: true },
-                { title: '스트레칭 완료', done: false }
-              ].map((item, idx) => (
-                <div key={idx} className={`p-4 rounded-xl border flex items-center gap-3 transition-all cursor-pointer ${
-                  item.done ? 'bg-primary/10 border-primary/30' : 'bg-card-bg border-white/5 opacity-60'
-                }`}>
-                   <div className={`w-6 h-6 rounded flex items-center justify-center ${item.done ? 'bg-primary' : 'border-2 border-slate-600'}`}>
-                     {item.done && <span className="material-icons-round text-background-dark text-sm">done</span>}
-                   </div>
-                   <span className={`text-sm font-bold ${item.done ? 'text-white' : 'text-slate-500'}`}>{item.title}</span>
-                </div>
-              ))}
+              <div className="flex justify-between mt-6 text-[10px] text-slate-600 font-black uppercase tracking-[0.2em]">
+                <span>Week 1</span>
+                <span>Week 2</span>
+                <span>Week 3</span>
+                <span>Present</span>
+              </div>
             </div>
           </section>
         </div>
 
         {/* Support Sidebar */}
         <aside className="col-span-12 lg:col-span-4 space-y-6">
-           <section className="bg-gradient-to-br from-indigo-900/40 to-card-bg rounded-2xl border border-lavender/20 p-6 shadow-xl">
-             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+           <section className="bg-gradient-to-br from-indigo-950/30 to-card-bg rounded-3xl border border-lavender/10 p-8 shadow-2xl overflow-hidden relative">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-lavender/5 blur-3xl rounded-full"></div>
+             <h3 className="text-lg font-black mb-4 flex items-center gap-3 text-white">
                <span className="material-icons-round text-lavender">emergency_share</span>
-               전문가 상담 핫라인
+               전문가 핫라인
              </h3>
-             <p className="text-xs text-slate-400 mb-6 leading-relaxed">
-               마음이 버거울 때, 24시간 언제든 도움의 손길이 기다립니다. 혼자서 이 무게를 다 짊어지지 마세요.
+             <p className="text-xs text-slate-400 mb-8 leading-relaxed font-medium">
+               마음의 무게가 느껴질 때, 주저하지 말고 전문가의 도움을 받으세요. 익명성이 보장되는 24시간 상담 채널입니다.
              </p>
-             <a href="tel:1577-0199" className="block w-full bg-lavender/10 hover:bg-lavender/20 border border-lavender/30 text-white rounded-2xl p-4 transition-all group mb-4">
+             <a href="tel:1577-0199" className="block w-full bg-lavender/5 hover:bg-lavender/10 border border-lavender/20 text-white rounded-2xl p-6 transition-all group mb-6 shadow-inner">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] text-lavender font-bold uppercase tracking-widest">임신·출산 상담 핫라인</p>
-                    <p className="text-2xl font-black">1577-0199</p>
+                    <p className="text-[10px] text-lavender font-black uppercase tracking-widest mb-1">임신·출산 전문 상담</p>
+                    <p className="text-3xl font-black tracking-tighter">1577-0199</p>
                   </div>
-                  <div className="w-12 h-12 bg-lavender rounded-full flex items-center justify-center group-hover:scale-110 transition-all">
-                    <span className="material-icons-round text-background-dark">call</span>
+                  <div className="w-14 h-14 bg-lavender rounded-2xl flex items-center justify-center group-hover:scale-110 transition-all shadow-lg shadow-lavender/10">
+                    <span className="material-icons-round text-background-dark text-2xl">call</span>
                   </div>
                 </div>
              </a>
-             <button className="w-full py-3 text-sm font-bold border border-slate-700 rounded-xl hover:bg-white/5 transition-all">
-               가까운 상담소 찾기
+             <button className="w-full py-4 text-xs font-black border border-white/5 rounded-2xl hover:bg-white/5 text-slate-500 hover:text-slate-300 transition-all uppercase tracking-widest">
+               가까운 지역 센터 찾기
              </button>
            </section>
 
-           <section className="bg-card-bg rounded-2xl p-6 border border-white/5">
-             <div className="flex items-center gap-4 mb-6">
+           <section className="bg-card-bg rounded-3xl p-8 border border-white/5 shadow-lg">
+             <div className="flex items-center gap-5 mb-8">
                 <div className="flex -space-x-3">
                   {[1, 2, 3].map(i => (
-                    <img key={i} src={`https://picsum.photos/id/${i+10}/50/50`} className="w-8 h-8 rounded-full border-2 border-background-dark" alt="User" />
+                    <img key={i} src={`https://picsum.photos/id/${i+10}/50/50`} className="w-9 h-9 rounded-full border-2 border-background-dark shadow-sm" alt="User" />
                   ))}
-                  <div className="w-8 h-8 rounded-full bg-primary/20 border-2 border-background-dark flex items-center justify-center text-[10px] font-bold text-primary">+1.2k</div>
+                  <div className="w-9 h-9 rounded-full bg-primary/20 border-2 border-background-dark flex items-center justify-center text-[10px] font-black text-primary backdrop-blur-sm">+1.2k</div>
                 </div>
                 <div>
-                  <p className="text-sm font-bold">혼자가 아니에요</p>
-                  <p className="text-[10px] text-slate-500">오늘 1,248명의 부모님이 접속했습니다</p>
+                  <p className="text-sm font-black text-white tracking-tight">커뮤니티 연결</p>
+                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none mt-1">Peer Support Active</p>
                 </div>
              </div>
              <div className="space-y-4">
                {[
-                 { title: '충분히 좋은 부모가 된다는 것', type: 'AUDIO', time: '12분' },
-                 { title: '수면 부족과 감정 조절', type: 'READ', time: '4분' }
+                 { title: '부모의 죄책감 다스리기', type: 'AUDIO', time: '12m' },
+                 { title: '수면 부족 시 감정 컨트롤', type: 'READ', time: '4m' }
                ].map((c, i) => (
-                 <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary/20 cursor-pointer transition-all">
-                    <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center">
-                      <span className="material-icons-round text-slate-500 text-sm">{c.type === 'AUDIO' ? 'podcasts' : 'menu_book'}</span>
+                 <div key={i} className="flex items-center gap-5 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/20 cursor-pointer transition-all group shadow-sm">
+                    <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                      <span className="material-icons-round text-slate-500 group-hover:text-primary transition-colors text-xl">{c.type === 'AUDIO' ? 'podcasts' : 'menu_book'}</span>
                     </div>
                     <div>
-                      <p className="text-xs font-bold">{c.title}</p>
-                      <p className="text-[9px] text-slate-500 mt-0.5 uppercase tracking-widest">{c.type} • {c.time}</p>
+                      <p className="text-xs font-black text-slate-200 group-hover:text-white transition-colors">{c.title}</p>
+                      <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-black">{c.type} • {c.time}</p>
                     </div>
                  </div>
                ))}

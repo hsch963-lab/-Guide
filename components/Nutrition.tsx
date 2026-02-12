@@ -1,11 +1,15 @@
 
 import React, { useState } from 'react';
 import { getNutritionAdvice } from '../services/gemini.ts';
-import { ChatMessage } from '../types.ts';
+import { ChatMessage, UserProfile } from '../types.ts';
 
-const Nutrition: React.FC = () => {
+interface NutritionProps {
+  profile: UserProfile;
+}
+
+const Nutrition: React.FC<NutritionProps> = ({ profile }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: '안녕하세요! 이유식 및 영양 도우미입니다. 식재료 정보나 알레르기 증상에 대해 무엇이든 물어보세요.' }
+    { role: 'model', text: `안녕하세요, ${profile.parentName}님. ${profile.babyName}의 현재 월령(${profile.months}개월)에 맞춘 전문적인 영양 조언을 제공해 드립니다. 무엇이 궁금하신가요?` }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -18,7 +22,8 @@ const Nutrition: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const response = await getNutritionAdvice(userMsg);
+      // Fix: Pass age and question as separate arguments to match the service definition
+      const response = await getNutritionAdvice(profile.months, userMsg);
       setMessages(prev => [...prev, { role: 'model', text: response || '답변을 생성할 수 없습니다.' }]);
     } catch (error) {
       setMessages(prev => [...prev, { role: 'model', text: '오류가 발생했습니다. 잠시 후 다시 시도해주세요.' }]);
@@ -31,14 +36,14 @@ const Nutrition: React.FC = () => {
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500 pb-20">
       <header className="flex justify-between items-end">
         <div>
-           <nav className="flex text-[10px] text-slate-500 mb-2 gap-2 uppercase tracking-widest font-bold">
-             <span>정밀 육아 큐레이션</span>
+           <nav className="flex text-[10px] text-slate-500 mb-2 gap-2 uppercase tracking-widest font-black">
+             <span>RE-ME Precision Curation</span>
              <span className="material-icons-round text-[12px]">chevron_right</span>
-             <span className="text-primary">맞춤 영양 및 이유식</span>
+             <span className="text-primary">{profile.babyName}'s Care</span>
            </nav>
-           <h1 className="text-3xl font-extrabold tracking-tight">영양 식단 & 가이드</h1>
+           <h1 className="text-4xl font-black tracking-tighter text-white">영양 & 이유식 엔진</h1>
         </div>
-        <button className="bg-primary text-background-dark px-6 py-2.5 rounded-xl font-bold flex items-center gap-2">
+        <button className="bg-primary text-background-dark px-8 py-3.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-xl shadow-primary/10">
           <span className="material-icons-round">add_circle</span> 식단 기록
         </button>
       </header>
@@ -46,25 +51,25 @@ const Nutrition: React.FC = () => {
       <div className="grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-8 space-y-8">
           {/* Weekly Schedule */}
-          <section className="bg-card-bg rounded-2xl border border-white/5 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-bold flex items-center gap-2">
-                <span className="material-icons-round text-primary">calendar_month</span> 주간 일정
+          <section className="bg-card-bg rounded-3xl border border-white/5 p-8 shadow-lg">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="font-black text-lg text-white flex items-center gap-2">
+                <span className="material-icons-round text-primary">calendar_month</span> 주간 정밀 식단
               </h2>
-              <span className="text-xs text-slate-500">10월 16일 - 10월 22일</span>
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">October 2024</span>
             </div>
-            <div className="grid grid-cols-7 gap-3">
+            <div className="grid grid-cols-7 gap-4">
               {['월', '화', '수', '목', '금', '토', '일'].map((day, idx) => (
-                <div key={idx} className="flex flex-col gap-2">
-                   <span className="text-center text-[10px] font-bold text-slate-500">{day}</span>
-                   <div className={`h-24 rounded-xl border p-2 flex flex-col justify-between transition-all ${
-                     idx === 2 ? 'bg-primary/10 border-primary shadow-[0_0_15px_cyan/10]' : 'bg-white/5 border-white/5 opacity-60'
+                <div key={idx} className="flex flex-col gap-3">
+                   <span className="text-center text-[10px] font-black text-slate-500 uppercase">{day}</span>
+                   <div className={`h-28 rounded-2xl border p-3 flex flex-col justify-between transition-all ${
+                     idx === 2 ? 'bg-primary/10 border-primary/40 shadow-xl' : 'bg-white/5 border-white/5'
                    }`}>
-                      <span className={`text-[10px] font-bold ${idx === 2 ? 'text-primary' : 'text-slate-500'}`}>{16 + idx}</span>
-                      <div className={`text-[9px] py-0.5 rounded text-center font-bold ${
-                        idx === 2 ? 'bg-primary text-background-dark' : 'bg-slate-700 text-slate-400'
+                      <span className={`text-[10px] font-black ${idx === 2 ? 'text-primary' : 'text-slate-500'}`}>{16 + idx}</span>
+                      <div className={`text-[9px] py-1 rounded-lg text-center font-black ${
+                        idx === 2 ? 'bg-primary text-background-dark' : 'bg-slate-800 text-slate-500'
                       }`}>
-                        {idx === 2 ? '철분 오트밀' : '사과 미음'}
+                        {idx === 2 ? '정밀 철분식' : '식단 대기'}
                       </div>
                    </div>
                 </div>
@@ -73,55 +78,55 @@ const Nutrition: React.FC = () => {
           </section>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Today Recommendation */}
-            <section className="bg-card-bg rounded-2xl border border-white/5 overflow-hidden flex flex-col">
-              <div className="p-5 border-b border-white/5 flex justify-between items-center bg-primary/5">
-                <h3 className="font-bold text-sm">오늘의 추천 식단</h3>
-                <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded">MORNING</span>
+            <section className="bg-card-bg rounded-3xl border border-white/5 overflow-hidden flex flex-col shadow-lg">
+              <div className="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="font-black text-xs text-slate-300 uppercase tracking-widest">추천 솔루션</h3>
+                <span className="text-[10px] font-black text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-tighter">Current Stage</span>
               </div>
-              <div className="p-6 space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-20 h-20 rounded-xl bg-slate-800 overflow-hidden">
-                    <img src="https://picsum.photos/200/200?oatmeal" alt="Food" className="w-full h-full object-cover" />
+              <div className="p-8 space-y-8">
+                <div className="flex items-center gap-6">
+                  <div className="w-24 h-24 rounded-2xl bg-slate-900 overflow-hidden border-2 border-white/5 shadow-xl">
+                    <img src="https://picsum.photos/200/200?babyfood" alt="Food" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg">철분 강화 오트밀 죽</h4>
-                    <p className="text-xs text-slate-500 italic mt-1">인지 발달을 위한 필수 영양</p>
+                    <h4 className="font-black text-xl text-white">맞춤형 영양 미음</h4>
+                    <p className="text-[11px] text-slate-500 italic mt-2 leading-relaxed">{profile.months}개월 발달 지표를 고려한<br/>최적의 성분 조합</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                   <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                     <p className="text-[10px] text-slate-500 font-bold uppercase mb-1">입자 크기</p>
-                     <p className="text-lg font-bold">0.3cm <span className="text-[10px] text-slate-500 font-normal">으깬 형태</span></p>
+                   <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
+                     <p className="text-[9px] text-slate-500 font-black uppercase mb-1 tracking-widest">농도 가이드</p>
+                     <p className="text-lg font-black text-white">미음 단계</p>
                    </div>
-                   <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                     <p className="text-[10px] text-slate-500 font-bold uppercase mb-1">농도</p>
-                     <p className="text-lg font-bold">걸쭉한 죽</p>
+                   <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
+                     <p className="text-[9px] text-slate-500 font-black uppercase mb-1 tracking-widest">일일 권장량</p>
+                     <p className="text-lg font-black text-white">450 - 600ml</p>
                    </div>
                 </div>
               </div>
             </section>
 
-            {/* Cooking Guide */}
-            <section className="bg-card-bg rounded-2xl border border-white/5 p-6">
-              <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
-                <span className="material-icons-round text-primary text-sm">microwave</span> 조리 가이드
+            <section className="bg-card-bg rounded-3xl border border-white/5 p-8 shadow-lg">
+              <h3 className="font-black text-xs text-slate-300 uppercase tracking-widest mb-6 flex items-center gap-2">
+                <span className="material-icons-round text-primary text-sm">psychology</span> 전문가 조리 팁
               </h3>
-              <ul className="space-y-4">
+              <ul className="space-y-6">
                  {[
-                   '물 1/2컵에 오트밀 2큰술을 넣고 끓이기',
-                   '모유/분유 30ml를 섞어 농도 조절',
-                   '적절한 온도로 식혀서 급여'
+                   '식재료 본연의 맛을 살린 무염 조리',
+                   '알레르기 반응 관찰을 위한 3일 주기 급여',
+                   '급여 전 최적 온도(36-38도) 유지'
                  ].map((step, idx) => (
-                   <li key={idx} className="flex gap-3">
-                     <span className="w-5 h-5 rounded bg-primary/20 text-primary text-[10px] font-bold flex items-center justify-center flex-shrink-0">{idx+1}</span>
-                     <p className="text-xs text-slate-300">{step}</p>
+                   <li key={idx} className="flex gap-4">
+                     <span className="w-6 h-6 rounded-lg bg-primary/20 text-primary text-[10px] font-black flex items-center justify-center flex-shrink-0 border border-primary/20">{idx+1}</span>
+                     <p className="text-xs text-slate-300 font-medium leading-relaxed">{step}</p>
                    </li>
                  ))}
               </ul>
-              <div className="mt-6 p-3 rounded-xl bg-amber-500/5 border border-amber-500/20 flex gap-3">
-                <span className="material-icons-round text-amber-500 text-sm">warning</span>
-                <p className="text-[10px] text-amber-500 leading-relaxed">배식 전 손목 안쪽으로 온도를 반드시 확인하세요.</p>
+              <div className="mt-8 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 flex gap-4">
+                <span className="material-icons-round text-amber-500 text-lg">verified</span>
+                <p className="text-[10px] text-amber-200/70 leading-relaxed font-bold italic">
+                  "아이의 입맛이 형성되는 중요한 시기입니다. 억지로 권하기보다 즐거운 식사 분위기를 만들어주세요."
+                </p>
               </div>
             </section>
           </div>
@@ -129,21 +134,24 @@ const Nutrition: React.FC = () => {
 
         {/* AI Chat Sidebar */}
         <aside className="col-span-12 lg:col-span-4 space-y-6">
-           <section className="bg-card-bg rounded-2xl border border-white/5 flex flex-col h-[500px] shadow-2xl overflow-hidden">
-             <div className="p-4 border-b border-white/5 flex items-center gap-3 bg-white/5">
-               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                 <span className="material-icons-round text-background-dark text-sm">smart_toy</span>
+           <section className="bg-card-bg rounded-3xl border border-white/5 flex flex-col h-[550px] shadow-2xl overflow-hidden relative">
+             <div className="p-5 border-b border-white/5 flex items-center gap-4 bg-white/5 backdrop-blur-sm">
+               <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
+                 <span className="material-icons-round text-background-dark text-lg">analytics</span>
                </div>
-               <h3 className="text-sm font-bold">AI 영양 도우미</h3>
+               <div>
+                 <h3 className="text-sm font-black text-white tracking-tight">RE-ME Nutrition AI</h3>
+                 <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Expert Support Engine</p>
+               </div>
              </div>
              
-             <div className="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-4">
+             <div className="flex-1 p-6 overflow-y-auto custom-scrollbar space-y-6">
                 {messages.map((m, i) => (
                   <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[85%] p-3 rounded-2xl text-xs leading-relaxed ${
+                    <div className={`max-w-[90%] p-4 rounded-2xl text-xs leading-relaxed font-medium shadow-sm ${
                       m.role === 'user' 
-                        ? 'bg-primary text-background-dark font-semibold rounded-tr-none' 
-                        : 'bg-white/5 border border-white/10 rounded-tl-none'
+                        ? 'bg-primary text-background-dark rounded-tr-none' 
+                        : 'bg-white/5 border border-white/10 rounded-tl-none text-slate-200'
                     }`}>
                       {m.text}
                     </div>
@@ -151,44 +159,33 @@ const Nutrition: React.FC = () => {
                 ))}
                 {isTyping && (
                   <div className="flex justify-start">
-                    <div className="bg-white/5 p-3 rounded-2xl rounded-tl-none animate-pulse text-[10px] text-slate-500">
-                      생각 중...
+                    <div className="bg-white/5 p-4 rounded-2xl rounded-tl-none animate-pulse text-[10px] text-slate-500 font-black uppercase tracking-widest">
+                      Analyzing context...
                     </div>
                   </div>
                 )}
              </div>
 
-             <div className="p-4 border-t border-white/5 bg-background-dark/50">
+             <div className="p-6 border-t border-white/5 bg-background-dark/30">
                <div className="relative">
                  <input 
                    type="text" 
                    value={input}
                    onChange={(e) => setInput(e.target.value)}
                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                   placeholder="질문을 입력하세요..."
-                   className="w-full bg-card-bg border border-white/10 rounded-xl py-3 pl-4 pr-12 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                   placeholder="전문가에게 질문하기..."
+                   className="w-full bg-background-dark/50 border border-white/10 rounded-2xl py-4 pl-5 pr-14 text-xs focus:ring-2 focus:ring-primary/50 focus:border-transparent outline-none transition-all placeholder:text-slate-600"
                  />
                  <button 
                    onClick={handleSend}
                    disabled={isTyping}
-                   className="absolute right-2 top-2 w-8 h-8 bg-primary rounded-lg text-background-dark flex items-center justify-center hover:opacity-80 transition-all disabled:opacity-50"
+                   className="absolute right-3 top-3 w-10 h-10 bg-primary rounded-xl text-background-dark flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-primary/10"
                  >
-                   <span className="material-icons-round text-lg">send</span>
+                   <span className="material-icons-round text-xl">keyboard_arrow_up</span>
                  </button>
                </div>
              </div>
            </section>
-
-           <div className="grid grid-cols-2 gap-4">
-             <button className="flex flex-col items-center justify-center gap-2 p-6 bg-card-bg rounded-2xl border border-white/5 hover:border-primary/40 transition-all group">
-               <span className="material-icons-round text-slate-500 group-hover:text-primary">print</span>
-               <span className="text-[10px] font-bold text-slate-500 group-hover:text-slate-300">리스트 인쇄</span>
-             </button>
-             <button className="flex flex-col items-center justify-center gap-2 p-6 bg-card-bg rounded-2xl border border-white/5 hover:border-primary/40 transition-all group">
-               <span className="material-icons-round text-slate-500 group-hover:text-primary">ios_share</span>
-               <span className="text-[10px] font-bold text-slate-500 group-hover:text-slate-300">공유하기</span>
-             </button>
-           </div>
         </aside>
       </div>
     </div>
