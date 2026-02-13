@@ -86,7 +86,10 @@ const Dashboard: React.FC<DashboardProps> = ({ profile }) => {
                   >
                     가이드 완료 표시
                   </button>
-                  <button className="text-slate-500 hover:text-white px-4 py-2.5 text-xs font-bold transition-all">
+                  <button 
+                    onClick={() => setActiveAction('EXPERT_GUIDE')}
+                    className="text-slate-500 hover:text-white px-4 py-2.5 text-xs font-bold transition-all border border-white/10 rounded-xl hover:bg-white/5"
+                  >
                     전문 보기
                   </button>
                 </div>

@@ -20,4 +20,4 @@ export interface ChatMessage {
   text: string;
 }
 
-export type ActionType = 'RECORD' | 'DIAGNOSIS' | 'GUIDE_COMPLETE' | null;
+export type ActionType = 'RECORD' | 'DIAGNOSIS' | 'GUIDE_COMPLETE' | 'EXPERT_GUIDE' | null;

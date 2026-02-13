@@ -41,6 +41,24 @@ export const getGrowthAnalysis = async (ageInMonths: number, babyData: any) => {
   return response.text;
 };
 
+export const getDetailedExpertGuide = async (ageInMonths: number, babyName: string) => {
+  const ai = getAIClient();
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-pro-preview',
+    contents: `${babyName} 아이의 ${ageInMonths}개월 심층 발달 리포트 요청.`,
+    config: {
+      systemInstruction: `${SYSTEM_INSTRUCTION_BASE}
+이 리포트는 '전문 보기' 섹션에 해당하며 다음 구조를 따라야 합니다:
+1. 해당 월령의 발달적 의의 (신경과학적 관점)
+2. 부모가 주의 깊게 관찰해야 할 발달 이정표
+3. 영양 섭취와 발달의 상관관계
+4. 이번 달 권장하는 상호작용 놀이.
+마크다운 형식을 사용하여 가독성 있게 작성하십시오.`,
+    }
+  });
+  return response.text;
+};
+
 export const getRecordAnalysis = async (ageInMonths: number, inputData: any) => {
   const ai = getAIClient();
   const response = await ai.models.generateContent({

@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ActionType, UserProfile, DashboardData } from '../types.ts';
-import { getRecordAnalysis } from '../services/gemini.ts';
+import { getRecordAnalysis, getDetailedExpertGuide } from '../services/gemini.ts';
 
 interface ActionModalProps {
   type: ActionType;
@@ -14,6 +14,7 @@ const ActionModal: React.FC<ActionModalProps> = ({ type, onClose, profile, onDat
   const [diagnosisStep, setDiagnosisStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [expertGuideContent, setExpertGuideContent] = useState<string | null>(null);
   const [recordForm, setRecordForm] = useState({
     feedingType: '분유',
     feedingAmount: '',
@@ -21,6 +22,24 @@ const ActionModal: React.FC<ActionModalProps> = ({ type, onClose, profile, onDat
     weight: '',
     notes: ''
   });
+
+  useEffect(() => {
+    if (type === 'EXPERT_GUIDE' && !expertGuideContent) {
+      const fetchGuide = async () => {
+        setIsSubmitting(true);
+        try {
+          const content = await getDetailedExpertGuide(profile.months, profile.babyName);
+          setExpertGuideContent(content);
+        } catch (error) {
+          console.error("Guide fetch failed", error);
+          setExpertGuideContent("가이드를 불러오는 중 오류가 발생했습니다.");
+        } finally {
+          setIsSubmitting(false);
+        }
+      };
+      fetchGuide();
+    }
+  }, [type, profile]);
 
   if (!type) return null;
 
@@ -42,7 +61,6 @@ const ActionModal: React.FC<ActionModalProps> = ({ type, onClose, profile, onDat
     try {
       const resultText = await getRecordAnalysis(profile.months, recordForm);
       
-      // JSON 추출 시도
       const jsonMatch = resultText.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const jsonData = JSON.parse(jsonMatch[0]);
@@ -74,6 +92,40 @@ const ActionModal: React.FC<ActionModalProps> = ({ type, onClose, profile, onDat
 
   const renderContent = () => {
     switch (type) {
+      case 'EXPERT_GUIDE':
+        return (
+          <div className="space-y-6 max-h-[70vh] flex flex-col">
+            <header className="flex-shrink-0">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="material-icons-round text-primary">auto_awesome</span>
+                <h3 className="text-xl font-black text-white">NURSLY.AI 심층 발달 리포트</h3>
+              </div>
+              <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">{profile.babyName} • 생후 {profile.months}개월차 정밀 분석</p>
+            </header>
+            <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
+              {isSubmitting ? (
+                <div className="py-10 text-center space-y-4">
+                  <span className="material-icons-round animate-spin text-primary text-4xl">sync</span>
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-widest animate-pulse">Deep-diving into developmental data...</p>
+                </div>
+              ) : (
+                <div className="prose prose-invert prose-sm max-w-none text-slate-300 leading-relaxed font-medium">
+                  {expertGuideContent?.split('\n').map((line, i) => (
+                    <p key={i} className={line.startsWith('#') ? 'text-white font-black mt-6 mb-2' : 'mb-3'}>
+                      {line.replace(/^#+\s/, '')}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+            <button 
+              onClick={onClose} 
+              className="flex-shrink-0 w-full bg-white text-background-dark font-black py-4 rounded-2xl hover:opacity-90 transition-all shadow-xl"
+            >
+              내용 확인 완료
+            </button>
+          </div>
+        );
       case 'RECORD':
         return (
           <div className="space-y-6">
@@ -212,8 +264,8 @@ const ActionModal: React.FC<ActionModalProps> = ({ type, onClose, profile, onDat
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-md bg-background-dark/80">
-      <div className="max-w-md w-full bg-card-bg border border-white/10 rounded-3xl p-8 shadow-2xl relative animate-in zoom-in-95">
-        <button onClick={onClose} className="absolute top-4 right-4 text-slate-500 hover:text-white">
+      <div className="max-w-2xl w-full bg-card-bg border border-white/10 rounded-3xl p-8 shadow-2xl relative animate-in zoom-in-95">
+        <button onClick={onClose} className="absolute top-4 right-4 text-slate-500 hover:text-white z-10">
           <span className="material-icons-round">close</span>
         </button>
         {renderContent()}
